@@ -3,7 +3,7 @@ import networkx as nx
 
 def plot_graph(G, opinions, activated_nodes=None, title="Graph"):
     # Basic visualization to understand spread visually
-    plt.figure(figsize=(8, 6))
+    fig, ax = plt.subplots(figsize=(8, 6))
     pos = nx.spring_layout(G, seed=42)
 
     # Highlight activated nodes with larger size
@@ -18,9 +18,12 @@ def plot_graph(G, opinions, activated_nodes=None, title="Graph"):
         node_color=opinions,
         cmap=plt.cm.viridis,
         node_size=node_sizes,
-        with_labels=True
+        with_labels=True,
+        ax=ax
     )
 
     plt.title(title)
-    plt.colorbar(plt.cm.ScalarMappable(cmap=plt.cm.viridis))
+    sm = plt.cm.ScalarMappable(cmap=plt.cm.viridis, norm=plt.Normalize(vmin=min(opinions), vmax=max(opinions)))
+    sm.set_array([])
+    plt.colorbar(sm, ax=ax)
     plt.show()

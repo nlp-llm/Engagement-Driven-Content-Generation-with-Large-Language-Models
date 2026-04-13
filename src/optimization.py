@@ -3,18 +3,23 @@ import random
 from .propagation import propagate
 
 def search_best_message(G, opinions, resolution=21):
-    # Brute-force search over possible message values
     best_score = -1
     best_message = None
+    best_nodes = None
+    best_updated = None
 
     for val in np.linspace(0, 1, resolution):
-        activated_count, _, _ = propagate(G, opinions, val)
+        activated_count, updated_opinions, activated_nodes = propagate(
+            G, opinions, message=val, start_node=0
+        )
 
         if activated_count > best_score:
             best_score = activated_count
             best_message = val
+            best_nodes = activated_nodes
+            best_updated = updated_opinions
 
-    return best_message, best_score
+    return best_message, best_score, best_nodes, best_updated
 
 
 def lightweight_ppo(G, opinions, iterations=8, candidates_per_iter=6, step_size=0.12):
